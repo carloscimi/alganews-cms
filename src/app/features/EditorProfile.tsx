@@ -10,7 +10,7 @@ interface EditorProps {
 
 function EditorProfile (props: EditorProps) {
 
-  throw new Error("Erro ao renderizar componente EditorProfile");
+  // throw new Error("Erro ao renderizar componente EditorProfile");
 
   return <EditorProfileWrapper>
     <EditorHeadline>
