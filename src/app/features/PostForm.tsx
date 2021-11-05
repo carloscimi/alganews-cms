@@ -3,6 +3,8 @@ import { Tag } from "react-tag-input"
 import styled from "styled-components"
 import countWordsInMarkdown from "../../core/utils/countWordsInMarkdown"
 import info from "../../core/utils/info"
+import { Post } from "../../sdk/@types"
+import PostService from "../../sdk/services/Post.service"
 import Button from "../components/Button/Button"
 import ImageUpload from "../components/ImageUpload"
 import Input from "../components/Input/Input"
@@ -13,21 +15,35 @@ import WordPriceCounter from "../components/WordPriceCounter"
 export default function PostForm () {
   const [tags, setTags] = useState<Tag[]>([])
   const [body, setBody] = useState('')
+  const [title, setTitle] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
-  function handleFormSubmit (e: React.FormEvent<HTMLFormElement>) {
+  async function handleFormSubmit (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const newPost: Post.Input = {
+      body,
+      title,
+      tags: tags.map(tag => tag.text),
+      imageUrl: imageUrl
+    }
+
+    const insertedPost = await PostService.insertNewPost(newPost)
+
     info({
       title: 'Post salvo com sucesso',
-      description: 'Você acabou de salvar o post'
+      description: 'Você acabou de criar o post com o id ' + insertedPost.id
     })
   }
 
   return <PostFormWrapper onSubmit={handleFormSubmit}>
     <Input
       label="título"
+      value={title}
+      onChange={e => setTitle(e.currentTarget.value)}
       placeholder="e.g.: Como fiquei rico aprendendo React"
     />
-    <ImageUpload label="Thumbnail do post" />
+    <ImageUpload label="Thumbnail do post" onImageUpload={setImageUrl} />
     <MarkdownEditor onChange={setBody} />
     <TagInput
       tags={tags}

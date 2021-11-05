@@ -1,13 +1,32 @@
+
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { User } from "../../sdk/@types";
+import UserService from "../../sdk/services/User.service";
+import getEditorDescription from "../../sdk/utils/getEditorDescription";
 import Profile from "../components/Profile";
 
 export default function EditorsList () {
+
+  const [editors, setEditors] = useState<User.EditorSummary[]>([])
+
+  useEffect(() => {
+    UserService
+      .getAllEditors()
+      .then(setEditors)
+  }, [])
+
   return <EditorsListWrapper>
-    <Profile editorId={1} name="Carlos Cimi" description="editor há 8 anos" />
-    <Profile editorId={2} name="Joao frango" description="editor há 2 anos" />
-    <Profile editorId={3} name="Alex Teixeira" description="editor há 2 anos" />
-    <Profile editorId={4} name="Camila Vasconcellos" description="editora há 6 anos" />
-    <Profile editorId={5} name="Gabriel Freitas" description="editor há 2 meses" />
+    {
+      editors.map(editor => {
+        return <Profile key={editor.id}
+          editorId={editor.id}
+          name={editor.name}
+          description={getEditorDescription(new Date(editor.createdAt))}
+          avatarUrl={editor.avatarUrls.small}
+        />
+      })
+    }
   </EditorsListWrapper>
 }
 

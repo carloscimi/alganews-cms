@@ -1,5 +1,5 @@
-import info from 'src/core/utils/info'
 import confirm from '../../../core/utils/confirm'
+import info from '../../../core/utils/info'
 import Logo from '../../components/Logo'
 import NavBar from '../../components/NavBar'
 import SessionController from '../../components/SessionController'
